@@ -1,0 +1,16 @@
+{
+    "name": "sis/form-builder",
+    "description": "Form Builder Helper",
+    "autoload": {
+        "psr-4": {
+            "Sis\\FormBuilder\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "bhagaskara",
+            "email": "bhagaskaraliancer@gmail.com"
+        }
+    ],
+    "require": {}
+}
