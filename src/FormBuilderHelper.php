@@ -4,11 +4,6 @@ namespace App\Helpers;
 
 use Carbon\Carbon;
 
-/*
-| Last Updated 2022-11-29
-| New: Input Month and Input Year
- */
-
 class FormBuilderHelper
 {
     // *** CK EDITOR CONFIG ***
