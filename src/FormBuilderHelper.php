@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace SIS;
 
 use Carbon\Carbon;
 
