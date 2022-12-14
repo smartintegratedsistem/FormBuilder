@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace Sis\FormBuilder;
 
 use Carbon\Carbon;
 
