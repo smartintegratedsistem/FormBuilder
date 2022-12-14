@@ -1,8 +1,13 @@
 <?php
 
-namespace Sis\FormBuilder;
+namespace App\Helpers;
 
 use Carbon\Carbon;
+
+/*
+| Last Updated 2022-12-07
+| New: Limit Upload Size
+ */
 
 class FormBuilderHelper
 {
@@ -25,7 +30,6 @@ class FormBuilderHelper
 
     const INPUT_TYPE_CURRENCY = "currency";
     const INPUT_TYPE_COLOR = "color";
-    const INPUT_TYPE_MONTH = "month";
     const INPUT_TYPE_DATE = "date";
     const INPUT_TYPE_TIME = "time";
     const INPUT_TYPE_DATE_TIME = "datetime-local";
@@ -63,6 +67,7 @@ class FormBuilderHelper
     const KEY_URL = "url";
     const KEY_WIDTH = "width";
     const KEY_HTML = "html";
+    const KEY_SIZE_LIMIT = "sizeLimit";
 
     const KEY_SELECT2_URL = "select2_url";
     const KEY_SELECT2_PLACEHOLDER = "select2_placeholder";
@@ -225,9 +230,6 @@ class FormBuilderHelper
         } else if ($type == self::INPUT_TYPE_DATE_TIME) {
             $html = $html . self::generateInputDateTime($inputField);
 
-        }  else if ($type == self::INPUT_TYPE_MONTH) {
-            $html = $html . self::generateInputMonth($inputField);
-
         } else if ($type == self::INPUT_TYPE_NUMBER) {
             $html = $html . self::generateInputNumber($inputField);
 
@@ -312,31 +314,10 @@ class FormBuilderHelper
             <label>$label</label>";
 
         if (!empty($subLabel)) {
-            $html = $html . "<p class='font-italic'>$subLabel</p>";
+            $html = $html . "<p class='font-italic m-1'>$subLabel</p>";
         }
 
         $html = $html . "<input class='form-control' type='text' id='$name' name='$name' value='$defaultValue' $otherAttribute>
-            </div>";
-
-        return $html;
-    }
-
-    private static function generateInputMonth($inputField)
-    {
-        $label = $inputField[self::KEY_LABEL];
-        $subLabel = isset($inputField[self::KEY_SUB_LABEL]) ? $inputField[self::KEY_SUB_LABEL] : '';
-        $name = $inputField[self::KEY_NAME];
-        $otherAttribute = isset($inputField[self::KEY_OTHER_ATTRIBUTE]) ? $inputField[self::KEY_OTHER_ATTRIBUTE] : "";
-        $defaultValue = isset($inputField[self::KEY_DEFAULT_VALUE]) ? $inputField[self::KEY_DEFAULT_VALUE] : old($inputField[self::KEY_NAME]);
-
-        $html = "<div class='form-group'>
-            <label>$label</label>";
-
-        if (!empty($subLabel)) {
-            $html = $html . "<p class='font-italic'>$subLabel</p>";
-        }
-
-        $html = $html . "<input class='form-control' type='month' id='$name' name='$name' value='$defaultValue' $otherAttribute>
             </div>";
 
         return $html;
@@ -528,7 +509,7 @@ class FormBuilderHelper
             <label>$label</label>";
 
         if (!empty($subLabel)) {
-            $html = $html . "<p class='font-italic'>$subLabel</p>";
+            $html = $html . "<p class='font-italic m-1'>$subLabel</p>";
         }
 
         $html = $html . "<input class='form-control' type='number' step='$step' id='$name' name='$name' value='$defaultValue' $otherAttribute>
@@ -541,12 +522,18 @@ class FormBuilderHelper
     {
         $label = $inputField[self::KEY_LABEL];
         $name = $inputField[self::KEY_NAME];
+        $subLabel = isset($inputField[self::KEY_SUB_LABEL]) ? $inputField[self::KEY_SUB_LABEL] : '';
         $otherAttribute = isset($inputField[self::KEY_OTHER_ATTRIBUTE]) ? $inputField[self::KEY_OTHER_ATTRIBUTE] : "";
         $defaultValue = isset($inputField[self::KEY_DEFAULT_VALUE]) ? $inputField[self::KEY_DEFAULT_VALUE] : old($inputField[self::KEY_NAME]);
 
         $html = "<div class='form-group'>
-            <label>$label</label>
-            <input class='form-control' type='text' id='$name' name='$name' value='$defaultValue' $otherAttribute>
+        <label>$label</label>";
+
+        if (!empty($subLabel)) {
+            $html = $html . "<p class='font-italic m-1'>$subLabel</p>";
+        }
+
+        $html = $html . "<input class='form-control' type='text' id='$name' name='$name' value='$defaultValue' $otherAttribute>
         </div>";
 
         $js = self::generateCurrencyJs($name);
@@ -649,7 +636,7 @@ class FormBuilderHelper
 
         //--- Sub Label ---
         if (!empty($subLabel)) {
-            $html = $html . "<p class='font-italic'>$subLabel</p>";
+            $html = $html . "<p class='font-italic m-1'>$subLabel</p>";
         }
 
         //--- Input Type Hidden ---
@@ -718,23 +705,29 @@ class FormBuilderHelper
     {
         $label = $inputField[self::KEY_LABEL];
         $name = $inputField[self::KEY_NAME];
+        $subLabel = isset($inputField[self::KEY_SUB_LABEL]) ? $inputField[self::KEY_SUB_LABEL] : '';
         $otherAttribute = isset($inputField[self::KEY_OTHER_ATTRIBUTE]) ? $inputField[self::KEY_OTHER_ATTRIBUTE] : "";
         $defaultValue = isset($inputField[self::KEY_DEFAULT_VALUE]) ? $inputField[self::KEY_DEFAULT_VALUE] : old($inputField[self::KEY_NAME]);
         $accept = isset($inputField[self::KEY_ACCEPT]) ? $inputField[self::KEY_ACCEPT] : "*/*";
         $isShowPreviewImage = isset($inputField[self::KEY_PREVIEW_IMAGE]) ? $inputField[self::KEY_PREVIEW_IMAGE] : false;
         $imgWidth = isset($inputField[self::KEY_WIDTH]) ? $inputField[self::KEY_WIDTH] : 300;
         $imgHeight = isset($inputField[self::KEY_HEIGHT]) ? $inputField[self::KEY_HEIGHT] : 300;
+        $sizeLimit = isset($inputField[self::KEY_SIZE_LIMIT]) ? $inputField[self::KEY_SIZE_LIMIT] : false;
 
-        $html = "<label>$label</label>
-            <div class='input-group'>
-                <div class='custom-file'>
-                    <input class='custom-file-input' type='file' id='$name' name='$name' accept='$accept' $otherAttribute>
-                    <label class='custom-file-label' for='$name' id='{$name}_label'>Pilih $label</label>
-                </div>
-            </div>"
+        $html = "<label>$label</label>";
+        if (!empty($subLabel)) {
+            $html = $html . "<p class='font-italic m-1'>$subLabel</p>";
+        }
+
+        $html = $html . "<div class='input-group'>
+            <div class='custom-file'>
+                <input class='custom-file-input' type='file' id='$name' name='$name' accept='$accept' $otherAttribute>
+                <label class='custom-file-label' for='$name' id='{$name}_label'>Pilih $label</label>
+            </div>
+        </div>"
             . ($isShowPreviewImage ? self::generatePreviewImageHtml($name, $imgWidth, $imgHeight, $defaultValue) : '');
 
-        $js = $isShowPreviewImage ? self::generatePreviewImageJs($name) : self::generatePreviewFileJs($name);
+        $js = $isShowPreviewImage ? self::generatePreviewImageJs($name, $sizeLimit) : self::generatePreviewFileJs($name, $sizeLimit);
 
         return ['html' => $html, 'js' => $js];
     }
@@ -743,33 +736,38 @@ class FormBuilderHelper
     {
         $label = $inputField[self::KEY_LABEL];
         $name = $inputField[self::KEY_NAME];
+        $subLabel = isset($inputField[self::KEY_SUB_LABEL]) ? $inputField[self::KEY_SUB_LABEL] : '';
         $otherAttribute = isset($inputField[self::KEY_OTHER_ATTRIBUTE]) ? $inputField[self::KEY_OTHER_ATTRIBUTE] : "";
         $defaultValue = isset($inputField[self::KEY_DEFAULT_VALUE]) ? $inputField[self::KEY_DEFAULT_VALUE] : old($inputField[self::KEY_NAME]);
         $accept = isset($inputField[self::KEY_ACCEPT]) ? $inputField[self::KEY_ACCEPT] : "*/*";
         $previewBtnText = isset($inputField[self::KEY_PREVIEW_BUTTON_TEXT]) ? $inputField[self::KEY_PREVIEW_BUTTON_TEXT] : "";
         $isShowPreviewFile = isset($inputField[self::KEY_PREVIEW_FILE]) ? $inputField[self::KEY_PREVIEW_FILE] : false;
+        $sizeLimit = isset($inputField[self::KEY_SIZE_LIMIT]) ? $inputField[self::KEY_SIZE_LIMIT] : false;
 
-        if (!$isShowPreviewFile) {
-            $html = "<label>$label</label>
-                <div class='input-group'>
-                    <div class='custom-file'>
-                        <input class='custom-file-input' type='file' id='$name' name='$name' accept='$accept' $otherAttribute>
-                        <label class='custom-file-label' for='$name' id='{$name}_label'>$label</label>
-                    </div>
-                </div>";
-        } else {
-            $btn = self::generatePreviewFileButton($defaultValue, $previewBtnText);
-            $html = "<label>$label</label>
-                <div class='input-group'>
-                    <div class='custom-file'>
-                        <input class='custom-file-input' type='file' id='$name' name='$name' accept='$accept' $otherAttribute>
-                        <label class='custom-file-label' for='$name' id='{$name}_label'>$label</label>
-                    </div>
-                </div>
-                <div>$btn</div>";
+        $html = "<label>$label</label>";
+        if (!empty($subLabel)) {
+            $html = $html . "<p class='font-italic m-1'>$subLabel</p>";
         }
 
-        $js = self::generatePreviewFileJs($name);
+        if (!$isShowPreviewFile) {
+            $html = $html . "<div class='input-group'>
+                <div class='custom-file'>
+                    <input class='custom-file-input' type='file' id='$name' name='$name' accept='$accept' $otherAttribute>
+                    <label class='custom-file-label' for='$name' id='{$name}_label'>$label</label>
+                </div>
+            </div>";
+        } else {
+            $btn = self::generatePreviewFileButton($defaultValue, $previewBtnText);
+            $html = $html . "<div class='input-group'>
+                <div class='custom-file'>
+                    <input class='custom-file-input' type='file' id='$name' name='$name' accept='$accept' $otherAttribute>
+                    <label class='custom-file-label' for='$name' id='{$name}_label'>$label</label>
+                </div>
+            </div>
+            <div>$btn</div>";
+        }
+
+        $js = self::generatePreviewFileJs($name, $sizeLimit);
 
         return ['html' => $html, 'js' => $js];
     }
@@ -777,14 +775,20 @@ class FormBuilderHelper
     private static function generateInputFileMultiple($inputField)
     {
         $label = $inputField[self::KEY_LABEL];
-        $labelOld = isset($inputField[self::KEY_LABEL_OLD]) ? $inputField[self::KEY_LABEL_OLD] : "Old $label";
         $name = $inputField[self::KEY_NAME];
+        $subLabel = isset($inputField[self::KEY_SUB_LABEL]) ? $inputField[self::KEY_SUB_LABEL] : '';
+        $labelOld = isset($inputField[self::KEY_LABEL_OLD]) ? $inputField[self::KEY_LABEL_OLD] : "Old $label";
         $otherAttribute = isset($inputField[self::KEY_OTHER_ATTRIBUTE]) ? $inputField[self::KEY_OTHER_ATTRIBUTE] : "";
         $accept = isset($inputField[self::KEY_ACCEPT]) ? $inputField[self::KEY_ACCEPT] : "*/*";
         $defaultValue = isset($inputField[self::KEY_DEFAULT_VALUE]) ? $inputField[self::KEY_DEFAULT_VALUE] : old($inputField[self::KEY_NAME]);
+        $sizeLimit = isset($inputField[self::KEY_SIZE_LIMIT]) ? $inputField[self::KEY_SIZE_LIMIT] : false;
 
-        $html = "<label>$label</label>
-        <div class='input-group'>
+        $html = "<label>$label</label>";
+        if (!empty($subLabel)) {
+            $html = $html . "<p class='font-italic m-1'>$subLabel</p>";
+        }
+
+        $html = $html . "<div class='input-group'>
             <div class='custom-file'>
                 <input class='custom-file-input' type='file' id='$name' name='${name}[]' accept='$accept' multiple $otherAttribute>
                 <label class='custom-file-label' for='$name' id='{$name}_label'>$label</label>
@@ -813,7 +817,7 @@ class FormBuilderHelper
             $html = $html . "</div>";
         }
 
-        $js = self::generatePreviewMultipleFileJs($name);
+        $js = self::generatePreviewMultipleFileJs($name, $sizeLimit);
 
         return ['html' => $html, 'js' => $js];
     }
@@ -868,55 +872,123 @@ class FormBuilderHelper
     }
 
     //-------------JAVA SCRIPT-------------
-    private static function generatePreviewImageJs($name)
+    private static function generatePreviewImageJs($name, $limit = false)
     {
-        $js = "<script>$('#$name').change(function() {
-            let input = this;
-            if (input.files.length > 0 && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#{$name}_preview').attr('src', e.target.result);
-                    $('#{$name}_label').html(input.files[0].name);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        });</script>";
+        if ($limit) {
+            $limitInMB = $limit / 1000000;
 
-        return $js;
-    }
-
-    private static function generatePreviewFileJs($name)
-    {
-        $js = "<script>$('#$name').change(function() {
-            let input = this;
-            if (input.files.length > 0 && input.files[0]) {
-                $('#{$name}_label').html(input.files[0].name);
-            }
-        });</script>";
-
-        return $js;
-    }
-
-    private static function generatePreviewMultipleFileJs($name)
-    {
-        $js = "<script>
-            $('#$name').change(function() {
+            $js = "<script>$('#$name').change(function() {
                 let input = this;
                 if (input.files.length > 0 && input.files[0]) {
-                    $('#div_multiple_$name').html('');
-
-                    for (let i = 0; i < input.files.length; i++) {
-                        item = input.files[i];
-                        let html = \"<button type='button' class='btn btn-outline-primary col-auto ml-2 mr-2 mb-2'><i class='fas fa-file mr-2'></i>\"+item.name+\"</button>\";
-                        $('#div_multiple_$name').append(html);
+                    if (this.files[0].size > $limit) {
+                        alert('Maximum File Size $limitInMB MB');
+                        this.value = '';
+                    } else{
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#{$name}_preview').attr('src', e.target.result);
+                            $('#{$name}_label').html(input.files[0].name);
+                        }
+                        reader.readAsDataURL(input.files[0]);
                     }
                 }
-            });
+            });</script>";
+        } else {
+            $js = "<script>$('#$name').change(function() {
+                let input = this;
+                if (input.files.length > 0 && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#{$name}_preview').attr('src', e.target.result);
+                        $('#{$name}_label').html(input.files[0].name);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });</script>";
+        }
 
-            function deleteOldFile(id){
-                $('#old_{$name}_'+id).remove();
-            }
-        </script>";
+        return $js;
+    }
+
+    private static function generatePreviewFileJs($name, $limit = false)
+    {
+        if ($limit) {
+            $limitInMB = $limit / 1000000;
+
+            $js = "<script>$('#$name').change(function() {
+                let input = this;
+                if (input.files.length > 0 && input.files[0]) {
+                    if(this.files[0].size > $limit){
+                        alert('Maximum File Size $limitInMB MB');
+                        this.value = '';
+                    } else{
+                        $('#{$name}_label').html(input.files[0].name);
+                    }
+                }
+            });</script>";
+        } else {
+            $js = "<script>$('#$name').change(function() {
+                let input = this;
+                if (input.files.length > 0 && input.files[0]) {
+                    $('#{$name}_label').html(input.files[0].name);
+                }
+            });</script>";
+        }
+
+        return $js;
+    }
+
+    private static function generatePreviewMultipleFileJs($name, $limit = false)
+    {
+        if ($limit) {
+            $limitInMB = $limit / 1000000;
+
+            $js = "<script>
+                $('#$name').change(function() {
+                    let input = this;
+                    if (input.files.length > 0) {
+                        $('#div_multiple_$name').html('');
+
+                        for (let i = 0; i < input.files.length; i++) {
+                            item = input.files[i];
+
+                            if(item.size > $limit){
+                                alert('Maximum File Size $limitInMB MB');
+                                $('#div_multiple_$name').html('');
+                                this.value = '';
+                                break;
+                            }
+
+                            let html = \"<button type='button' class='btn btn-outline-primary col-auto ml-2 mr-2 mb-2'><i class='fas fa-file mr-2'></i>\"+item.name+\"</button>\";
+                            $('#div_multiple_$name').append(html);
+                        }
+                    }
+                });
+
+                function deleteOldFile(id){
+                    $('#old_{$name}_'+id).remove();
+                }
+            </script>";
+        } else {
+            $js = "<script>
+                $('#$name').change(function() {
+                    let input = this;
+                    if (input.files.length > 0) {
+                        $('#div_multiple_$name').html('');
+
+                        for (let i = 0; i < input.files.length; i++) {
+                            item = input.files[i];
+                            let html = \"<button type='button' class='btn btn-outline-primary col-auto ml-2 mr-2 mb-2'><i class='fas fa-file mr-2'></i>\"+item.name+\"</button>\";
+                            $('#div_multiple_$name').append(html);
+                        }
+                    }
+                });
+
+                function deleteOldFile(id){
+                    $('#old_{$name}_'+id).remove();
+                }
+            </script>";
+        }
 
         return $js;
     }
