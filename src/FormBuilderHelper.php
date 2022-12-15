@@ -5,8 +5,8 @@ namespace Sis\FormBuilder;
 use Carbon\Carbon;
 
 /*
-| Last Updated 2022-12-07
-| New: Limit Upload Size
+| Last Updated 2022-12-15
+| New: Enable Negative In Input Currency
  */
 
 class FormBuilderHelper
@@ -1000,6 +1000,7 @@ class FormBuilderHelper
             mask: Number,
             thousandsSeparator: '.',
             radix: ',',
+            signed: true,
         })
         </script>";
 
