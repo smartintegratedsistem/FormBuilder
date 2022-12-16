@@ -5,8 +5,8 @@ namespace Sis\FormBuilder;
 use Carbon\Carbon;
 
 /*
-| Last Updated 2022-12-15
-| New: Enable Negative In Input Currency
+| Last Updated 2022-12-16
+| New: Input Month
  */
 
 class FormBuilderHelper
@@ -33,6 +33,7 @@ class FormBuilderHelper
     const INPUT_TYPE_DATE = "date";
     const INPUT_TYPE_TIME = "time";
     const INPUT_TYPE_DATE_TIME = "datetime-local";
+    const INPUT_TYPE_MONTH = "month";
     const INPUT_TYPE_FILE = "file";
     const INPUT_TYPE_FILE_MULTIPLE = "files";
     const INPUT_TYPE_HEADER = "header";
@@ -224,6 +225,9 @@ class FormBuilderHelper
         } else if ($type == self::INPUT_TYPE_DATE) {
             $html = $html . self::generateInputDate($inputField);
 
+        } else if ($type == self::INPUT_TYPE_MONTH) {
+            $html = $html . self::generateInputMonth($inputField);
+
         } else if ($type == self::INPUT_TYPE_TIME) {
             $html = $html . self::generateInputTime($inputField);
 
@@ -363,6 +367,21 @@ class FormBuilderHelper
         $html = "<div class='form-group'>
             <label>$label</label>
             <input class='form-control' type='date' id='$name' name='$name' value='$defaultValue' $otherAttribute>
+        </div>";
+
+        return $html;
+    }
+
+    private static function generateInputMonth($inputField)
+    {
+        $label = $inputField[self::KEY_LABEL];
+        $name = $inputField[self::KEY_NAME];
+        $otherAttribute = isset($inputField[self::KEY_OTHER_ATTRIBUTE]) ? $inputField[self::KEY_OTHER_ATTRIBUTE] : "";
+        $defaultValue = isset($inputField[self::KEY_DEFAULT_VALUE]) ? $inputField[self::KEY_DEFAULT_VALUE] : old($inputField[self::KEY_NAME]);
+
+        $html = "<div class='form-group'>
+            <label>$label</label>
+            <input class='form-control' type='month' id='$name' name='$name' value='$defaultValue' $otherAttribute>
         </div>";
 
         return $html;
