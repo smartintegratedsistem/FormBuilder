@@ -5,8 +5,8 @@ namespace Sis\FormBuilder;
 use Carbon\Carbon;
 
 /*
-| Last Updated 2022-12-16
-| New: Input Month
+| Last Updated 2022-12-19
+| New: Placeholder Select
  */
 
 class FormBuilderHelper
@@ -62,6 +62,7 @@ class FormBuilderHelper
     const KEY_PREVIEW_IMAGE = "isPreviewImage";
     const KEY_PREVIEW_BUTTON_TEXT = "btnText";
     const KEY_PREVIEW_FILE = "isPreviewFile";
+    const KEY_PLACEHOLDER = "placeholder";
     const KEY_ROWS = "rows";
     const KEY_STEP = "step";
     const KEY_TYPE = "type";
@@ -564,6 +565,7 @@ class FormBuilderHelper
     {
         $label = $inputField[self::KEY_LABEL];
         $name = $inputField[self::KEY_NAME];
+        $placeholder = isset($inputField[self::KEY_PLACEHOLDER]) ? $inputField[self::KEY_PLACEHOLDER] : "";
         $otherAttribute = isset($inputField[self::KEY_OTHER_ATTRIBUTE]) ? $inputField[self::KEY_OTHER_ATTRIBUTE] : "";
         $defaultValue = isset($inputField[self::KEY_DEFAULT_VALUE]) ? $inputField[self::KEY_DEFAULT_VALUE] : old($inputField[self::KEY_NAME]);
         $options = isset($inputField[self::KEY_OPTIONS]) ? $inputField[self::KEY_OPTIONS] : [];
@@ -571,6 +573,11 @@ class FormBuilderHelper
         $html = "<div class='form-group'>
             <label>$label</label>
             <select class='form-control' name='$name' id='$name' $otherAttribute>";
+
+        if ($placeholder != "") {
+            $html = $html . "<option selected disabled>$placeholder</option>";
+        }
+
         foreach ($options as $key => $value) {
             if ($defaultValue == $key) {
                 $html = $html . "<option value='$key' selected> $value </option>";
