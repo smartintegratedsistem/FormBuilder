@@ -47,7 +47,7 @@ class FormBuilderHelper
     const INPUT_TYPE_TEXT_AREA = "text-area";
     const INPUT_TYPE_TEXT_AREA_CK_EDITOR = "text-area-ck-editor";
     const INPUT_TYPE_RAW_HTML = "raw-html";
-    const INPUT_TYPE_AGREEMENT_ = "agreement";
+    const INPUT_TYPE_AGREEMENT = "agreement";
 
     const KEY_ACCEPT = "accept";
     const KEY_DEFAULT_VALUE = "defaultValue";
