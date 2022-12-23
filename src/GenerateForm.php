@@ -139,7 +139,7 @@ trait GenerateForm
         } else if ($type == self::INPUT_TYPE_COLOR) {
             $html = $html . self::generateInputColor($inputField);
 
-        }  else if ($type == self::INPUT_TYPE_AGREEMENT_) {
+        }  else if ($type == self::INPUT_TYPE_AGREEMENT) {
             $html = $html . self::generateAgreement($inputField);
 
         } else if ($type == self::INPUT_TYPE_PHONE) {
