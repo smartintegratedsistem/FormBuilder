@@ -139,6 +139,9 @@ trait GenerateForm
         } else if ($type == self::INPUT_TYPE_COLOR) {
             $html = $html . self::generateInputColor($inputField);
 
+        }  else if ($type == self::INPUT_TYPE_AGREEMENT_) {
+            $html = $html . self::generateAgreement($inputField);
+
         } else if ($type == self::INPUT_TYPE_PHONE) {
             $html = $html . self::generateInputPhone($inputField);
 
