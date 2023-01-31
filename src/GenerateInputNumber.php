@@ -41,7 +41,7 @@ trait GenerateInputNumber
             $html = $html . "<p class='font-italic m-1'>$subLabel</p>";
         }
 
-        $html = $html . "<input class='form-control' type='text' id='$name' name='$name' value='$defaultValue' $otherAttribute>
+        $html = $html . "<input autocomplete='off' class='form-control' type='text' id='$name' name='$name' value='$defaultValue' $otherAttribute>
         </div>";
 
         $js = self::generateCurrencyJs($name);
