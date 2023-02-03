@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\FormBuilder;
+namespace Sis\FormBuilder;
 
 trait GenerateForm
 {
