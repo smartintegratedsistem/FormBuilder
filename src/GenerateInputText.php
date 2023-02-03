@@ -1,6 +1,6 @@
 <?php
 
-namespace Sis\FormBuilder;
+namespace App\Helpers\FormBuilder;
 
 trait GenerateInputText
 {
@@ -13,12 +13,35 @@ trait GenerateInputText
 
         $html = "<div class='form-group'>
             <label>$label</label>
-            <input class='form-control' type='password' id='$name' name='$name' value='$defaultValue' $otherAttribute>
+            <div class='row'>
+                <div class='col'>
+                    <input class='form-control' type='password' id='$name' name='$name' value='$defaultValue' $otherAttribute>
+                </div>
+                <div class='col-auto'>
+                    <button type='button' class='btn btn-info' id='btn_show_password_$name'><i class='fa fa-eye'></i></button>
+                </div>
+            </div>
         </div>";
 
-        return $html;
+        $js = "<script>
+            $(()=> {
+                $('#btn_show_password_$name').click(()=>{
+                    let current_type = $('#$name').attr('type');
+                    if (current_type == 'password') {
+                        current_type = 'text';
+                        $('#btn_show_password_$name').html('<i class=\"fa fa-eye-slash\"></i>');
+                    } else {
+                        current_type = 'password';
+                        $('#btn_show_password_$name').html('<i class=\"fa fa-eye\"></i>');
+                    }
+                    $('#$name').attr('type',current_type);
+                });
+            });
+        </script>";
+
+        return ['html' => $html, 'js' => $js];
     }
-    
+
     private static function generateInputText($inputField)
     {
         $label = $inputField[self::KEY_LABEL];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sis\FormBuilder;
+namespace App\Helpers\FormBuilder;
 
 trait GenerateForm
 {
@@ -146,8 +146,10 @@ trait GenerateForm
             $html = $html . self::generateInputPhone($inputField);
 
         } else if ($type == self::INPUT_TYPE_PASSWORD) {
-            $html = $html . self::generateInputPassword($inputField);
-
+            $result = self::generateInputPassword($inputField);
+            $html = $html . $result['html'];
+            $js = $js . $result['js'];
+            
         } else if ($type == self::INPUT_TYPE_TEXT_AREA) {
             $html = $html . self::generateInputTextArea($inputField);
 
