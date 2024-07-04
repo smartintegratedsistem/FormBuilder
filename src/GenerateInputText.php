@@ -100,6 +100,7 @@ trait GenerateInputText
                 $js = "<script>$(document).ready(function () {
                     CKEDITOR.replace( '$name',{
                         height : '$height',
+                        versionCheck: false,
                         filebrowserUploadMethod : 'form',
                         filebrowserUploadUrl : '" . route(self::ROUTE_UPLOAD_FILE_CK_EDITOR, ['_token' => csrf_token()]) . "'
                     } );
@@ -109,6 +110,7 @@ trait GenerateInputText
                     CKEDITOR.replace( '$name',{
                         height : '$height',
                         removePlugins : 'image',
+                        versionCheck: false,
                     } );
                 });</script>";
             }
